@@ -1,9 +1,7 @@
 CREATE TABLE ACCOUNTS
 (
-    user_id serial PRIMARY KEY,
-    user_name VARCHAR Unique not null,
-    password VARCHAR not null,
-    created_on TIMESTAMP not null,
-    last_login TIMESTAMP
+    acct_id serial PRIMARY KEY,
+    acct_name VARCHAR not null,
+    acct_email VARCHAR Unique not null,
+    acct_password VARCHAR not null
 );
-
