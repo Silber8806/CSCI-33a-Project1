@@ -125,6 +125,10 @@ def register():
             flash("Passwords don\'t match")
     return render_template('register.html')
 
+@app.route("/account/")
+def account():
+    """ account settings page, not implemented... """
+    return render_template('account.html')
 
 @app.route("/logout")
 def logout():
