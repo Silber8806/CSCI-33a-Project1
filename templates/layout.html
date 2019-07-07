@@ -5,6 +5,7 @@
         {% block basestyle %}
         <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
         {% endblock %}
         {% block customstyle %}
         {% endblock %}
@@ -23,7 +24,10 @@
                 <ul class="navbar-nav mr-auto">
                   {% if session['email'] %}
                     <li class="nav-item active">
-                        <a class="nav-link" href="{{ url_for('account') }}"> {{ session['name'] }} <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="{{ url_for('search') }}"> Search <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#"> {{ session['name'] }} <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item active">
                         <a class="nav-link" href="{{ url_for('logout') }}"> Logout <span class="sr-only">(current)</span></a>
@@ -41,11 +45,19 @@
 
         </nav>
 
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <ul class=flashes>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
+                {% for category, message in messages %}
+                    <li class="flash_message">
+                        {% if category == "message" %}
+                        <div class="alert alert-primary" role="alert">
+                        {% else %}
+                        <div class="alert alert-{{ category }}" role="alert">
+                        {% endif %}
+                            {{ message }}
+                       </div>
+                    </li>
                 {% endfor %}
                 </ul>
             {% endif %}

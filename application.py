@@ -58,6 +58,10 @@ def update_credentials(acct_email, acct_id=None, acct_name=None):
 
     return 0
 
+def flash_err(message):
+    flash(message,'danger')
+    return 0
+
 @app.route("/")
 def index():
     """ main page of website """
@@ -88,15 +92,15 @@ def login():
                                  active_account['acct_name'],\
                                 ]
                 update_credentials(*session_info)
-                return render_template('index.html')
+                return render_template('search.html')
             else:
                 error_message="bad password!"
-                flash(error_message)
+                flash_err(error_message)
         elif (account.rowcount == 0):
             error_message = "Can't find account!"
-            flash(error_message)
+            flash_err(error_message)
         else:
-            flash(error_message)
+            flash_err(error_message)
     return render_template('login.html')
 
 @app.route("/register", methods=['GET','POST'])
@@ -116,14 +120,59 @@ def register():
                 flash("account created!")
                 db.commit()
                 update_credentials(acct_email=acct_email)
-                render_template('index.html')
+                render_template('search.html')
             except exc.IntegrityError:
-                flash("Book Keeper Account already exists...")
+                flash_err("Book Keeper Account already exists...")
             except Exception as e:
-                flash("500 Internal Database Error")
+                flash_err("500 Internal Database Error")
         else:
-            flash("Passwords don\'t match")
+            flash_err("Passwords don\'t match")
     return render_template('register.html')
+
+@app.route("/search/", methods=['GET','POST'])
+def search():
+    """ search page with results """
+    if request.method == 'POST':
+        search_term = str('%' + str(request.form['book_search']) + '%')
+
+        search_sql = """
+            SELECT 
+                book_id,
+                book_isbn,
+                book_name,
+                book_author,
+                book_year
+            from BOOKS 
+            where book_isbn ilike :search_term or
+                  book_name ilike :search_term or 
+                  book_author ilike :search_term
+            order by book_name,
+                     book_author,
+                     book_isbn
+            """
+        search_results = db.execute(search_sql,{"search_term":str(search_term)})
+        search_term=search_term[1:-1]
+        return render_template('search.html', search_term=search_term, search_results=search_results)
+    return render_template('search.html')
+
+@app.route("/book/<int:book_id>")
+def book(book_id):
+    """ Get a specific book..."""
+    book_sql = """
+        SELECT 
+            book_id,
+            book_isbn,
+            book_name,
+            book_author,
+            book_year
+        from BOOKS 
+        where book_id = :book_id
+        order by book_name,
+                 book_author,
+                 book_isbn
+        """
+    current_book = db.execute(book_sql, {"book_id": book_id})
+    return render_template('book.html', book=current_book )
 
 @app.route("/account/")
 def account():

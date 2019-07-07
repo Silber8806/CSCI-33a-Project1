@@ -1,3 +1,5 @@
+/* the below is based on user form from internet.
+
 * {box-sizing: border-box}
 
 /* Full-width input fields */
@@ -60,9 +62,28 @@ button:hover {
   display: table;
 }
 
+ul.flashes {
+    list-style-type: none;
+}
+
 /* Change styles for cancel button and signup button on extra small screens */
 @media screen and (max-width: 300px) {
   .cancelbtn, .signupbtn {
     width: 100%;
   }
+}
+
+.form-control-borderless {
+    border: none;
+}
+
+.search_result
+{
+    margin: 50px;
+}
+
+.form-control-borderless:hover, .form-control-borderless:active, .form-control-borderless:focus {
+    border: none;
+    outline: none;
+    box-shadow: none;
 }
