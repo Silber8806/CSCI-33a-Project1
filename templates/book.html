@@ -4,4 +4,37 @@
 
 {% block content %}
 
+    <div class="container">
+      <div class="row row-offcanvas row-offcanvas-right">
+        <div class="col-12 col-md-9">
+          <div class="jumbotron">
+            <h1>{{ book.book_name }} </h1>
+            <p> Author: {{ book.book_author }} </p>
+            <p> ISBN: {{ book.book_isbn }} </p>
+            <p> Year: {{ book.book_year }} </p>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <img id="book_picture" class="rounded float-right mw-100" src="{{ url_for('static',filename='images/placeholder.jpg') }}" alt="Book: {{ book.book_name }} by {{ book.book_author }}">
+            </div><!--/span-->
+            <div class="col-6">
+              <h2>Summary</h2>
+              <p>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. Odio tempor orci dapibus ultrices
+                  in iaculis nunc. Hendrerit dolor magna eget est lorem ipsum dolor sit. Lobortis
+                  mattis aliquam faucibus purus in massa tempor nec feugiat. Sagittis orci a
+                  scelerisque purus semper eget duis at tellus. In ornare quam viverra orci sagittis
+                  eu volutpat odio. Rutrum tellus pellentesque eu tincidunt. Vel quam elementum
+                  pulvinar etiam non quam lacus suspendisse. Volutpat ac tincidunt vitae semper
+                  quis lectus nulla at. Ac auctor augue mauris augue neque gravida in fermentum.
+                  Gravida in fermentum et sollicitudin ac. Arcu felis bibendum ut tristique et
+                  egestas quis ipsum suspendisse. Lectus quam id leo in.
+              </p>
+            </div><!--/span-->
+          </div><!--/row-->
+        </div><!--/span-->
+      </div><!--/row-->
+    </div><!--/.container-->
+
 {% endblock %}

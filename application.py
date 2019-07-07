@@ -1,12 +1,11 @@
 import os
+import json
 
-from flask import Flask, session, render_template, request, flash, redirect, url_for
+from flask import Flask, session, render_template, request, flash, redirect, url_for, jsonify
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy import exc
-
-
 
 app = Flask(__name__,static_url_path='/static')
 
@@ -167,17 +166,48 @@ def book(book_id):
             book_year
         from BOOKS 
         where book_id = :book_id
-        order by book_name,
-                 book_author,
-                 book_isbn
         """
     current_book = db.execute(book_sql, {"book_id": book_id})
+
+    if (current_book.rowcount == 0):
+        return render_template('error.html',message="404 - Book not found!")
+    else:
+        current_book = current_book.fetchone()
+
     return render_template('book.html', book=current_book )
 
 @app.route("/account/")
 def account():
     """ account settings page, not implemented... """
     return render_template('account.html')
+
+@app.route("/api/<isbn>")
+def api(isbn):
+
+    book_sql = """
+        SELECT 
+            book_id,
+            book_isbn,
+            book_name,
+            book_author,
+            book_year
+        from BOOKS 
+        where book_isbn = :book_isbn
+        """
+    current_book = db.execute(book_sql, {"book_isbn": isbn})
+
+    if (current_book.rowcount == 0):
+        send_json = {}
+    else:
+        current_book = current_book.fetchone()
+        send_json = {}
+        send_json["title"]=current_book.book_name
+        send_json["author"]=current_book.book_author
+        send_json["year"]=current_book.book_year
+        send_json["isbn"]=current_book.book_isbn
+        send_json["review_count"]=100
+
+    return jsonify(send_json)
 
 @app.route("/logout")
 def logout():
