@@ -1,5 +1,6 @@
 import os
 import json
+import requests
 
 from flask import Flask, session, render_template, request, flash, redirect, url_for, jsonify
 from flask_session import Session
@@ -17,6 +18,8 @@ if not os.getenv("DATABASE_URL"):
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
+goodreads_api_key = os.getenv("GOODREADS_API_KEY")
 
 # Set up database
 engine = create_engine(os.getenv("DATABASE_URL"))
@@ -170,11 +173,36 @@ def book(book_id):
     current_book = db.execute(book_sql, {"book_id": book_id})
 
     if (current_book.rowcount == 0):
-        return render_template('error.html',message="404 - Book not found!")
+        return render_template('404.html'), 404
     else:
         current_book = current_book.fetchone()
 
-    return render_template('book.html', book=current_book )
+    res = requests.get("https://www.goodreads.com/book/review_counts.json",
+                        params={"key": goodreads_api_key, "isbns": current_book.book_isbn})
+    goodreads_data = res.json()['books'][0]
+
+    user_id = session['id']
+
+    review_sql = """
+        SELECT 
+            review_name,
+            review_text,
+            a.acct_name,
+            r.acct_id_fk = :user_id as owner_review
+        from REVIEWS r left outer join ACCOUNTS a 
+            on (a.acct_id = r.acct_id_fk)
+        where book_id_fk = :book_id
+        """
+    reviews = db.execute(review_sql, {"book_id": book_id, "user_id": user_id}).fetchall()
+    write_review_active=len([review for review in reviews if review.owner_review ]) == 0
+
+    print([review.owner_review for review in reviews])
+
+    return render_template('book.html', \
+                           book=current_book, \
+                           goodreads=goodreads_data, \
+                           reviews=reviews, \
+                           review_active=write_review_active)
 
 @app.route("/account/")
 def account():
@@ -196,18 +224,52 @@ def api(isbn):
         """
     current_book = db.execute(book_sql, {"book_isbn": isbn})
 
+    review_cnt_sql = """
+            SELECT 
+                count(*) as review_count
+            from REVIEWS r inner join BOOKS b
+                on (r.book_id_fk = b.book_id)
+                where b.book_isbn = :book_isbn
+        """
+    current_review_count_qry = db.execute(review_cnt_sql, {"book_isbn": isbn})
+
     if (current_book.rowcount == 0):
         send_json = {}
     else:
         current_book = current_book.fetchone()
+        current_review_count = current_review_count_qry.fetchone()['review_count']
         send_json = {}
         send_json["title"]=current_book.book_name
         send_json["author"]=current_book.book_author
         send_json["year"]=current_book.book_year
         send_json["isbn"]=current_book.book_isbn
-        send_json["review_count"]=100
+        send_json["review_count"]=current_review_count
 
     return jsonify(send_json)
+
+@app.route("/post_review/<int:book_id>", methods=["POST"])
+def post_review(book_id):
+    user_id = session['id']
+    review_name = request.form['review_title']
+    review_text = request.form['review_text']
+
+    create_review_sql = """
+        INSERT into REVIEWS(book_id_fk,acct_id_fk,review_name,review_text) values
+        (:book_id,:user_id,:review_name,:review_text)
+    """
+
+    new_review_info = {"book_id": book_id, "user_id": user_id, "review_name": review_name, "review_text":review_text }
+
+    try:
+        db.execute(create_review_sql, new_review_info)
+        flash("book review created!")
+        db.commit()
+    except exc.IntegrityError:
+        flash_err("Book review already exists...")
+    except Exception as e:
+        flash_err("500 Internal Database Error")
+
+    return redirect(url_for('book',book_id=book_id))
 
 @app.route("/logout")
 def logout():

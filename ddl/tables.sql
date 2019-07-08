@@ -29,7 +29,9 @@ CREATE TABLE REVIEWS
     book_id_fk INTEGER not null references BOOKS(book_id),
     acct_id_fk INTEGER not null references ACCOUNTS(acct_id),
     review_name VARCHAR not null,
-    review_starts INTEGER
+    review_text TEXT not null,
+    unique (book_id_fk, acct_id_fk)
 );
+
 
 
