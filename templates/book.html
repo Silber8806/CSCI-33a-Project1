@@ -22,7 +22,6 @@
                     <img id="book_picture" class="rounded float-right mw-100"
                          src="{{ url_for('static',filename='images/placeholder.jpg') }}"
                          alt="Book: {{ book.book_name }} by {{ book.book_author }}">
-                </div><!--/span-->
                 <div class="col-6">
                     <h2>Summary</h2>
                     <p>
@@ -68,7 +67,7 @@
     {% if review_active %}
     <h1> Feel free to write a review: </h1>
     <br>
-    <form method="POST" action="{{ url_for('post_review',book_id=book.book_id) }}">
+    <form id="review_form" method="POST" action="{{ url_for('post_review',book_id=book.book_id) }}">
         <label for="review_title"><h4> Review Name: </h4></label>
         <input id="review_name" type="text" name="review_title" placeholder="Your review name!" required>
         <label for="review_text"><h4> Your Book Keeper Review: </h4></label>
