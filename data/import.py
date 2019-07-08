@@ -20,8 +20,8 @@ def main():
     i = 0
     print("Starting staging process...")
     for isbn, title, author, year in reader:
-        # I did this, because it was demonstrated in class..
-        # please for your own future benefit, use a loader and don't print to stdout...5000 rows...insane time.
+        # please use COPY next time instead of this type of single inserts.  I followed the lecture.
+        # but this is really slow process.
         db.execute(
             "INSERT INTO BOOKS_STG (book_isbn, book_name, book_author, book_year) VALUES (:book_isbn, :book_name, :book_author, :book_year)",
             {"book_isbn": isbn, "book_name": title, "book_author": author, "book_year": year})

@@ -26,10 +26,16 @@ engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 
+def standardize_email(email):
+    return str(email).strip().lower()
+
+
+def standardize_form_input(text_value):
+    return str(text_value).strip()
+
+
 def update_credentials(acct_email, acct_id=None, acct_name=None):
     """ updates the credentials."""
-
-    print("inside function")
 
     if (acct_id is None or acct_name is None):
         acct_sql = """
@@ -83,8 +89,8 @@ def index():
 def login():
     """ Login page.."""
     if request.method == 'POST':
-        email_address = request.form['email']
-        email_password = request.form['password']
+        email_address = standardize_email(request.form['email'])
+        email_password = standardize_form_input(request.form['password'])
         acct_sql = """
                 SELECT 
                     acct_id, 
@@ -121,7 +127,9 @@ def register():
     """ Register page"""
     if request.method == 'POST':
         if (request.form['password'] == request.form['repeat-password']):
-            acct_name, acct_email, acct_password = request.form['name'], request.form['email'], request.form['password']
+            acct_name, acct_email, acct_password = standardize_form_input(request.form['name']), \
+                                                   standardize_email(request.form['email']), \
+                                                   standardize_form_input(request.form['password'])
             new_acct_sql = """
                 INSERT into ACCOUNTS(acct_name,acct_email,acct_password) values 
                 (:acct_name , :acct_email, :acct_password)
@@ -133,7 +141,7 @@ def register():
                 flash("account created!")
                 db.commit()
                 update_credentials(acct_email=acct_email)
-                render_template('search.html')
+                return render_template('search.html')
             except exc.IntegrityError:
                 flash_err("Book Keeper Account already exists...")
             except Exception as e:
@@ -147,7 +155,7 @@ def register():
 def search():
     """ search page with results """
     if request.method == 'POST':
-        search_term = str('%' + str(request.form['book_search']) + '%')
+        search_term = str('%' + standardize_form_input(request.form['book_search']) + '%')
 
         search_sql = """
             SELECT 
@@ -164,7 +172,7 @@ def search():
                      book_author,
                      book_isbn
             """
-        search_results = db.execute(search_sql, {"search_term": str(search_term)})
+        search_results = db.execute(search_sql, {"search_term": search_term})
         search_term = search_term[1:-1]
         return render_template('search.html', search_term=search_term, search_results=search_results)
     return render_template('search.html')
@@ -192,8 +200,8 @@ def book(book_id):
 
     res = requests.get("https://www.goodreads.com/book/review_counts.json",
                        params={"key": goodreads_api_key, "isbns": current_book.book_isbn})
-    goodreads_data = res.json()['books'][0]
 
+    goodreads_data = res.json()['books'][0]
     user_id = session['id']
 
     review_sql = """
@@ -265,8 +273,8 @@ def api(isbn):
 @app.route("/post_review/<int:book_id>", methods=["POST"])
 def post_review(book_id):
     user_id = session['id']
-    review_name = request.form['review_title']
-    review_text = request.form['review_text']
+    review_name = standardize_form_input(request.form['review_title'])
+    review_text = standardize_form_input(request.form['review_text'])
 
     create_review_sql = """
         INSERT into REVIEWS(book_id_fk,acct_id_fk,review_name,review_text) values

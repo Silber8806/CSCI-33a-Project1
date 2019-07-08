@@ -1,8 +1,7 @@
 /* the below is based on user form from internet.
-
 * {box-sizing: border-box}
-
 /* Full-width input fields */
+
   input[type=text], input[type=password], input[type=email], textarea {
   width: 100%;
   padding: 15px;
@@ -71,13 +70,6 @@ ul.flashes {
     list-style-type: none;
 }
 
-/* Change styles for cancel button and signup button on extra small screens */
-@media screen and (max-width: 300px) {
-  .cancelbtn, .signupbtn {
-    width: 100%;
-  }
-}
-
 .form-control-borderless {
     border: none;
 }
@@ -103,4 +95,11 @@ ul.flashes {
 #submit_review
 {
     float:right;
+}
+
+/* Change styles for cancel button and signup button on extra small screens */
+@media screen and (max-width: 300px) {
+  .cancelbtn, .signupbtn {
+    width: 100%;
+  }
 }
