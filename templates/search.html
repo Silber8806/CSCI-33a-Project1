@@ -4,68 +4,74 @@
 
 {% block content %}
 
-       <div class="container">
-        {% if session['email'] %}
+<div class="container">
+    {% if session['email'] %}
 
 
-             <div class="row justify-content-center">
-             `      <div class="col-12 col-md-10 col-lg-8">
-                        <form class="card card-sm" action="{{ url_for('search') }}" method="POST">
-                            <div class="card-body row no-gutters align-items-center">
-                                <!--end of col-->
-                                <div class="col">
-                                    <input class="form-control form-control-lg form-control-borderless" type="search" placeholder="Search topics or keywords" name="book_search">
-                                </div>
-                                <!--end of col-->
-                                <div class="col-auto">
-                                    <button class="btn btn-lg btn-success" type="submit">Search</button>
-                                </div>
-                                <!--end of col-->
-                            </div>
-                        </form>
+    <div class="row justify-content-center">
+        `
+        <div class="col-12 col-md-10 col-lg-8">
+            <form class="card card-sm" action="{{ url_for('search') }}" method="POST">
+                <div class="card-body row no-gutters align-items-center">
+                    <!--end of col-->
+                    <div class="col">
+                        <input class="form-control form-control-lg form-control-borderless" type="search"
+                               placeholder="Search topics or keywords" name="book_search">
+                    </div>
+                    <!--end of col-->
+                    <div class="col-auto">
+                        <button class="btn btn-lg btn-success" type="submit">Search</button>
                     </div>
                     <!--end of col-->
                 </div>
+            </form>
+        </div>
+        <!--end of col-->
+    </div>
 
-            {% if search_term %}
-                <br>
-                <h3> Searched: {{ search_term }} for {{ search_results.rowcount }} hits: </h3>
+    {% if search_term %}
+    <br>
+    <h3> Searched: {{ search_term }} for {{ search_results.rowcount }} hits: </h3>
 
-                {% if search_results.rowcount == 0 %}
-                    <h4> No Search Results </h4>
-                {% else %}
-                      {% for result in search_results %}
-                          <br>
-                          <div class="card">
-                              <div class="card-header col-sm">
-                                  <a href="{{ url_for('book',book_id=result.book_id)}}">
-                                      <h5 class="card-title result-title">{{ result.book_name }} ({{ result.book_year }}) </h5>
-                                  </a>
-                              </div>
-                               <div class="card-body col-sm">
-                                <p class="card-text"> Author: {{ result.book_author }}</p>
-                                <p class="card-text"> ISBN: {{ result.book_isbn }}</p>
-                                <a href="{{ url_for('book',book_id=result.book_id)}}" class="btn btn-primary">More Info </a>
-                              </div>
-                          </div>
-                        {% endfor %}
-                {% endif %}
-            {% endif %}
+    {% if search_results.rowcount == 0 %}
+    <h4> No Search Results </h4>
+    {% else %}
+    {% for result in search_results %}
+    <br>
+    <div class="card">
+        <div class="card-header col-sm">
+            <a href="{{ url_for('book',book_id=result.book_id)}}">
+                <h5 class="card-title result-title">{{ result.book_name }} ({{ result.book_year }}) </h5>
+            </a>
+        </div>
+        <div class="card-body col-sm">
+            <p class="card-text"> Author: {{ result.book_author }}</p>
+            <p class="card-text"> ISBN: {{ result.book_isbn }}</p>
+            <a href="{{ url_for('book',book_id=result.book_id)}}" class="btn btn-primary">More Info </a>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endif %}
 
-        {% else %}
+    {% else %}
 
-        <div class="card-deck mb-2 text-center">
-            <div class="card mb-4 shadow-sm">
-              <div class="card-header">
+    <div class="card-deck mb-2 text-center">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header">
                 <h4 class="my-0 font-weight-normal">Login Options</h4>
-              </div>
-              <div class="card-body">
-                <a href="{{ url_for('login') }}"> <button type="button" class="btn btn-lg btn-block btn-outline-primary">Login</button></a>
-                  <a href="{{ url_for('register') }}"> <button type="button" class="btn btn-lg btn-block btn-outline-primary">Register</button></a>
-              </div>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('login') }}">
+                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">Login</button>
+                </a>
+                <a href="{{ url_for('register') }}">
+                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">Register</button>
+                </a>
             </div>
         </div>
-        {% endif %}
-        </div>
+    </div>
+    {% endif %}
+</div>
 
 {% endblock %}

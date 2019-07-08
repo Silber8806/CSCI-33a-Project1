@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy import exc
 
-app = Flask(__name__,static_url_path='/static')
+app = Flask(__name__, static_url_path='/static')
 
 # Check for environment variable
 if not os.getenv("DATABASE_URL"):
@@ -25,6 +25,7 @@ goodreads_api_key = os.getenv("GOODREADS_API_KEY")
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
+
 def update_credentials(acct_email, acct_id=None, acct_name=None):
     """ updates the credentials."""
 
@@ -40,7 +41,7 @@ def update_credentials(acct_email, acct_id=None, acct_name=None):
                 where acct_email = :acct_email 
                 """
         try:
-            account = db.execute(acct_sql,{"acct_email":str(acct_email)})
+            account = db.execute(acct_sql, {"acct_email": str(acct_email)})
             print(account)
             if (account.rowcount == 1):
                 credential_account = account.fetchone()
@@ -60,21 +61,25 @@ def update_credentials(acct_email, acct_id=None, acct_name=None):
 
     return 0
 
+
 def flash_err(message):
-    flash(message,'danger')
+    flash(message, 'danger')
     return 0
+
 
 @app.errorhandler(404)
 def page_not_found(e):
     # note that we set the 404 status explicitly
     return render_template('404.html'), 404
 
+
 @app.route("/")
 def index():
     """ main page of website """
     return render_template('index.html')
 
-@app.route("/login", methods = ['GET','POST'])
+
+@app.route("/login", methods=['GET', 'POST'])
 def login():
     """ Login page.."""
     if request.method == 'POST':
@@ -89,19 +94,19 @@ def login():
                 from ACCOUNTS 
                 where acct_email = :email_address 
                 """
-        account = db.execute(acct_sql,{"email_address":str(email_address)})
+        account = db.execute(acct_sql, {"email_address": str(email_address)})
         if (account.rowcount == 1):
             active_account = account.fetchone()
             if (email_password == active_account["acct_password"]):
                 session_info = [ \
-                                active_account["acct_email"],\
-                                 active_account["acct_id"], \
-                                 active_account['acct_name'],\
-                                ]
+                    active_account["acct_email"], \
+                    active_account["acct_id"], \
+                    active_account['acct_name'], \
+                    ]
                 update_credentials(*session_info)
                 return render_template('search.html')
             else:
-                error_message="bad password!"
+                error_message = "bad password!"
                 flash_err(error_message)
         elif (account.rowcount == 0):
             error_message = "Can't find account!"
@@ -110,20 +115,21 @@ def login():
             flash_err(error_message)
     return render_template('login.html')
 
-@app.route("/register", methods=['GET','POST'])
+
+@app.route("/register", methods=['GET', 'POST'])
 def register():
     """ Register page"""
     if request.method == 'POST':
         if (request.form['password'] == request.form['repeat-password']):
-            acct_name, acct_email, acct_password = request.form['name'],request.form['email'], request.form['password']
+            acct_name, acct_email, acct_password = request.form['name'], request.form['email'], request.form['password']
             new_acct_sql = """
                 INSERT into ACCOUNTS(acct_name,acct_email,acct_password) values 
                 (:acct_name , :acct_email, :acct_password)
             """
 
-            new_account_dict={"acct_name":acct_name,"acct_email": acct_email, "acct_password" : acct_password}
+            new_account_dict = {"acct_name": acct_name, "acct_email": acct_email, "acct_password": acct_password}
             try:
-                db.execute(new_acct_sql,new_account_dict)
+                db.execute(new_acct_sql, new_account_dict)
                 flash("account created!")
                 db.commit()
                 update_credentials(acct_email=acct_email)
@@ -136,7 +142,8 @@ def register():
             flash_err("Passwords don\'t match")
     return render_template('register.html')
 
-@app.route("/search/", methods=['GET','POST'])
+
+@app.route("/search/", methods=['GET', 'POST'])
 def search():
     """ search page with results """
     if request.method == 'POST':
@@ -157,10 +164,11 @@ def search():
                      book_author,
                      book_isbn
             """
-        search_results = db.execute(search_sql,{"search_term":str(search_term)})
-        search_term=search_term[1:-1]
+        search_results = db.execute(search_sql, {"search_term": str(search_term)})
+        search_term = search_term[1:-1]
         return render_template('search.html', search_term=search_term, search_results=search_results)
     return render_template('search.html')
+
 
 @app.route("/book/<int:book_id>")
 def book(book_id):
@@ -183,7 +191,7 @@ def book(book_id):
         current_book = current_book.fetchone()
 
     res = requests.get("https://www.goodreads.com/book/review_counts.json",
-                        params={"key": goodreads_api_key, "isbns": current_book.book_isbn})
+                       params={"key": goodreads_api_key, "isbns": current_book.book_isbn})
     goodreads_data = res.json()['books'][0]
 
     user_id = session['id']
@@ -199,7 +207,7 @@ def book(book_id):
         where book_id_fk = :book_id
         """
     reviews = db.execute(review_sql, {"book_id": book_id, "user_id": user_id}).fetchall()
-    write_review_active=len([review for review in reviews if review.owner_review ]) == 0
+    write_review_active = len([review for review in reviews if review.owner_review]) == 0
 
     print([review.owner_review for review in reviews])
 
@@ -209,14 +217,15 @@ def book(book_id):
                            reviews=reviews, \
                            review_active=write_review_active)
 
+
 @app.route("/account/")
 def account():
     """ account settings page, not implemented... """
     return render_template('account.html')
 
+
 @app.route("/api/<isbn>")
 def api(isbn):
-
     book_sql = """
         SELECT 
             book_id,
@@ -244,13 +253,14 @@ def api(isbn):
         current_book = current_book.fetchone()
         current_review_count = current_review_count_qry.fetchone()['review_count']
         send_json = {}
-        send_json["title"]=current_book.book_name
-        send_json["author"]=current_book.book_author
-        send_json["year"]=current_book.book_year
-        send_json["isbn"]=current_book.book_isbn
-        send_json["review_count"]=current_review_count
+        send_json["title"] = current_book.book_name
+        send_json["author"] = current_book.book_author
+        send_json["year"] = current_book.book_year
+        send_json["isbn"] = current_book.book_isbn
+        send_json["review_count"] = current_review_count
 
     return jsonify(send_json)
+
 
 @app.route("/post_review/<int:book_id>", methods=["POST"])
 def post_review(book_id):
@@ -263,7 +273,7 @@ def post_review(book_id):
         (:book_id,:user_id,:review_name,:review_text)
     """
 
-    new_review_info = {"book_id": book_id, "user_id": user_id, "review_name": review_name, "review_text":review_text }
+    new_review_info = {"book_id": book_id, "user_id": user_id, "review_name": review_name, "review_text": review_text}
 
     try:
         db.execute(create_review_sql, new_review_info)
@@ -274,7 +284,8 @@ def post_review(book_id):
     except Exception as e:
         flash_err("500 Internal Database Error")
 
-    return redirect(url_for('book',book_id=book_id))
+    return redirect(url_for('book', book_id=book_id))
+
 
 @app.route("/logout")
 def logout():

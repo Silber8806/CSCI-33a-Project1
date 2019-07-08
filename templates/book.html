@@ -4,81 +4,83 @@
 
 {% block content %}
 
-    <div class="container">
-      <div class="row row-offcanvas row-offcanvas-right">
+<div class="container">
+    <div class="row row-offcanvas row-offcanvas-right">
         <div class="col-12 col-md-9">
-          <div class="jumbotron">
-            <h1>{{ book.book_name }} </h1>
-            <p> Author: {{ book.book_author }} </p>
-            <p> ISBN: {{ book.book_isbn }} </p>
-            <p> Year: {{ book.book_year }} </p>
-            {% if goodreads %}
+            <div class="jumbotron">
+                <h1>{{ book.book_name }} </h1>
+                <p> Author: {{ book.book_author }} </p>
+                <p> ISBN: {{ book.book_isbn }} </p>
+                <p> Year: {{ book.book_year }} </p>
+                {% if goodreads %}
                 <p> Goodreads Reviews: {{ goodreads.work_ratings_count }} </p>
                 <p> Goodreads Average Rating: {{ goodreads.average_rating }}</p>
-            {% endif %}
-          </div>
-          <div class="row">
-            <div class="col-6">
-              <img id="book_picture" class="rounded float-right mw-100" src="{{ url_for('static',filename='images/placeholder.jpg') }}" alt="Book: {{ book.book_name }} by {{ book.book_author }}">
-            </div><!--/span-->
-            <div class="col-6">
-              <h2>Summary</h2>
-              <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Odio tempor orci dapibus ultrices
-                  in iaculis nunc. Hendrerit dolor magna eget est lorem ipsum dolor sit. Lobortis
-                  mattis aliquam faucibus purus in massa tempor nec feugiat. Sagittis orci a
-                  scelerisque purus semper eget duis at tellus. In ornare quam viverra orci sagittis
-                  eu volutpat odio. Rutrum tellus pellentesque eu tincidunt. Vel quam elementum
-                  pulvinar etiam non quam lacus suspendisse. Volutpat ac tincidunt vitae semper
-                  quis lectus nulla at. Ac auctor augue mauris augue neque gravida in fermentum.
-                  Gravida in fermentum et sollicitudin ac. Arcu felis bibendum ut tristique et
-                  egestas quis ipsum suspendisse. Lectus quam id leo in.
-              </p>
-            </div><!--/span-->
-          </div><!--/row-->
+                {% endif %}
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <img id="book_picture" class="rounded float-right mw-100"
+                         src="{{ url_for('static',filename='images/placeholder.jpg') }}"
+                         alt="Book: {{ book.book_name }} by {{ book.book_author }}">
+                </div><!--/span-->
+                <div class="col-6">
+                    <h2>Summary</h2>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                        incididunt ut labore et dolore magna aliqua. Odio tempor orci dapibus ultrices
+                        in iaculis nunc. Hendrerit dolor magna eget est lorem ipsum dolor sit. Lobortis
+                        mattis aliquam faucibus purus in massa tempor nec feugiat. Sagittis orci a
+                        scelerisque purus semper eget duis at tellus. In ornare quam viverra orci sagittis
+                        eu volutpat odio. Rutrum tellus pellentesque eu tincidunt. Vel quam elementum
+                        pulvinar etiam non quam lacus suspendisse. Volutpat ac tincidunt vitae semper
+                        quis lectus nulla at. Ac auctor augue mauris augue neque gravida in fermentum.
+                        Gravida in fermentum et sollicitudin ac. Arcu felis bibendum ut tristique et
+                        egestas quis ipsum suspendisse. Lectus quam id leo in.
+                    </p>
+                </div><!--/span-->
+            </div><!--/row-->
         </div><!--/span-->
-      </div><!--/row-->
-      </div><!--/.container-->
+    </div><!--/row-->
+</div><!--/.container-->
 
-      <div class="container">
+<div class="container">
 
-          {% if reviews | length != 0 %}
-                 <div class="row">
-                     <h1> Reviews: </h1>
-                 </div>
-                {% for review in reviews %}
-                      <br>
-                      <div class="card">
-                          <div class="card-header col-sm">
-                             <h5 class="card-title result-title">{{ review.review_name }} </h5>
-                             <p> {{ review.acct_name }} </p>
-                          </div>
-                           <div class="card-body col-sm">
-                            <p class="card-text"> {{ review.review_text }}</p>
-                           </div>
-                      </div>
-                {% endfor %}
-          {% endif %}
+    {% if reviews | length != 0 %}
+    <div class="row">
+        <h1> Reviews: </h1>
+    </div>
+    {% for review in reviews %}
+    <br>
+    <div class="card">
+        <div class="card-header col-sm">
+            <h5 class="card-title result-title">{{ review.review_name }} </h5>
+            <p> {{ review.acct_name }} </p>
+        </div>
+        <div class="card-body col-sm">
+            <p class="card-text"> {{ review.review_text }}</p>
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
 
-          <br>
+    <br>
 
-          {% if review_active %}
-            <h1> Feel free to write a review: </h1>
-            <br>
-            <form method="POST" action="{{ url_for('post_review',book_id=book.book_id) }}" >
-                <label for="review_title"> <h4> Review Name: </h4> </label>
-                <input id="review_name" type="text" name="review_title" placeholder="Your review name!" required>
-                <label for="review_text">  <h4> Your Book Keeper Review: </h4> </label>
-                <textarea id="review_text" type="text" name="review_text" placeholder="Your thoughts!" required></textarea>
-                <button id="submit_review" type="submit" class="signupbtn">Submit Review </button>
-            </form>
-          {% else %}
-          <div class="row">
-            <h1> You have already submitted a review! </h1>
-          </div>
+    {% if review_active %}
+    <h1> Feel free to write a review: </h1>
+    <br>
+    <form method="POST" action="{{ url_for('post_review',book_id=book.book_id) }}">
+        <label for="review_title"><h4> Review Name: </h4></label>
+        <input id="review_name" type="text" name="review_title" placeholder="Your review name!" required>
+        <label for="review_text"><h4> Your Book Keeper Review: </h4></label>
+        <textarea id="review_text" type="text" name="review_text" placeholder="Your thoughts!" required></textarea>
+        <button id="submit_review" type="submit" class="signupbtn">Submit Review</button>
+    </form>
+    {% else %}
+    <div class="row">
+        <h1> You have already submitted a review! </h1>
+    </div>
 
-          {% endif %}
-      </div>
+    {% endif %}
+</div>
 
 {% endblock %}
