@@ -143,6 +143,12 @@ re-positioned the JavaScripts from near the end of the \<body> to within the  \<
 keep the CSS file instead of run it through SCSS, because the file length is small at the moment.  I think in the 
 future I would refactor CSS to SCSS once the rules become more cumbersome. 
 
+#### Use of Bash
+I decided to quickly write up a quick procedure to source variables with bash.  Afterwards, I realized that might
+have been a bit zealous and I could have probably just kept a single config file and sourced it.  I kept the 
+file, because it is useful in this setting.  I think Python uses a .env file for the same purposes, but would 
+have to research what best practices would be here.
+
 #### Postgres exist clause use
 For database logic, I frequently use the postgres exists clause.  Exists works similar to a join, but doesn't produce
 duplicate keys.  Instead it acts more like a filter.  I use this in production environments for ETL processes and 
