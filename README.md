@@ -147,7 +147,8 @@ future I would refactor CSS to SCSS once the rules become more cumbersome.
 I decided to quickly write up a quick procedure to source variables with bash.  Afterwards, I realized that might
 have been a bit zealous and I could have probably just kept a single config file and sourced it.  I kept the 
 file, because it is useful in this setting.  I think Python uses a .env file for the same purposes, but would 
-have to research what best practices would be here.
+have to research what best practices would be here. I decided to use that 
+ file as a start to an automation directory where I could put infrastructure related code.
 
 #### Postgres exist clause use
 For database logic, I frequently use the postgres exists clause.  Exists works similar to a join, but doesn't produce
@@ -168,7 +169,7 @@ I based the insert statement on the class example, printed out rows and didn't u
 I did this,because the class example used insert, printed rows and didn't have a with clause when opening files.
 Typically, if I was going to write this at work, I'd add a with statement and I'd use the COPY Command, bulk loader or
  native driver to upload the data, because it's a bit faster.  I decided against the later due to the code being 
- structured that way in the lecture. It's also possible that my knowledge is outdated here.
+ structured that way in the lecture. It's also possible that my knowledge is outdated here. 
 
 ## sources
 1. Placeholder Image: 
