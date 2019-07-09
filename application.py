@@ -152,6 +152,10 @@ def register():
 def search():
     """ search page with results """
     if request.method == 'POST':
+        if len(request.form['book_search'].strip()) == 0:
+            flash_err("blanks not allowed in search...")
+            return render_template('search.html')
+
         search_term = str('%' + standardize_form_input(request.form['book_search']) + '%')
 
         search_sql = """
