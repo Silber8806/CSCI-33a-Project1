@@ -1,6 +1,21 @@
-/* the below is based on user form from internet.
-* {box-sizing: border-box}
-/* Full-width input fields */
+/* I decided against a SCSS file only
+due to the small amount of rules.  If
+I was to continue adding more rules, I
+would refactor this as a SCSS instead
+of a CSS file.*/
+
+footer {
+    height: 50px;
+}
+
+hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+}
+
+ul.flashes {
+    list-style-type: none;
+}
 
 input[type=text],
 input[type=password],
@@ -14,11 +29,6 @@ textarea {
     background: #f1f1f1;
 }
 
-#book_picture {
-    width: 100%;
-    float: left;
-}
-
 input[type=text]:focus,
 input[type=password]:focus,
 input[type=email]:focus,
@@ -27,12 +37,6 @@ textarea  {
     outline: none;
 }
 
-hr {
-    border: 1px solid #f1f1f1;
-    margin-bottom: 25px;
-}
-
-/* Set a style for all buttons */
 button {
     background-color: #4CAF50;
     color: white;
@@ -48,33 +52,27 @@ button:hover {
     opacity:1;
 }
 
-/* Extra styles for the cancel button */
+.form-control-borderless:hover,
+.form-control-borderless:active,
+.form-control-borderless:focus {
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+.container {
+    padding: 16px;
+}
+
 .cancelbtn {
     padding: 14px 20px;
     background-color: #f44336;
 }
 
-/* Float cancel and signup buttons and add an equal width */
 .cancelbtn,
 .signupbtn {
     float: left;
     width: 50%;
-}
-
-/* Add padding to container elements */
-.container {
-    padding: 16px;
-}
-
-/* Clear floats */
-.clearfix::after {
-    content: "";
-    clear: both;
-    display: table;
-}
-
-ul.flashes {
-    list-style-type: none;
 }
 
 .form-control-borderless {
@@ -83,14 +81,6 @@ ul.flashes {
 
 .search_result {
     margin: 50px;
-}
-
-.form-control-borderless:hover,
-.form-control-borderless:active,
-.form-control-borderless:focus {
-    border: none;
-    outline: none;
-    box-shadow: none;
 }
 
 #review_text {
@@ -112,8 +102,9 @@ ul.flashes {
     min-height: calc(100vh - 150px);
 }
 
-footer {
-    height: 50px;
+#book_picture {
+    width: 100%;
+    float: left;
 }
 
 #review_form {
@@ -131,7 +122,12 @@ footer {
     width: 75%;
 }
 
-/* Change styles for cancel button and signup button on extra small screens */
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
 @media screen and (max-width: 300px) {
         .cancelbtn,
         .signupbtn {
