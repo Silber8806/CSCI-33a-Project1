@@ -48,19 +48,16 @@ def update_credentials(acct_email, acct_id=None, acct_name=None):
                 """
         try:
             account = db.execute(acct_sql, {"acct_email": str(acct_email)})
-            print(account)
+
             if (account.rowcount == 1):
                 credential_account = account.fetchone()
                 acct_id = credential_account["acct_id"]
                 acct_name = credential_account["acct_name"]
-                print("set")
-            else:
-                print("failed")
+
         except Exception as e:
             flash(e)
             return 1
 
-    print("new session")
     session['id'] = acct_id
     session['name'] = acct_name
     session['email'] = acct_email
@@ -216,8 +213,6 @@ def book(book_id):
         """
     reviews = db.execute(review_sql, {"book_id": book_id, "user_id": user_id}).fetchall()
     write_review_active = len([review for review in reviews if review.owner_review]) == 0
-
-    print([review.owner_review for review in reviews])
 
     return render_template('book.html', \
                            book=current_book, \
