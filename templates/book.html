@@ -19,9 +19,10 @@
             </div>
             <div class="row">
                 <div class="col-6">
-                    <img id="book_picture" class="rounded float-right mw-100"
+                    <img id="book_picture" class="rounded mw-100"
                          src="{{ url_for('static',filename='images/placeholder.jpg') }}"
                          alt="Book: {{ book.book_name }} by {{ book.book_author }}">
+                </div>
                 <div class="col-6">
                     <h2>Summary</h2>
                     <p>
@@ -40,17 +41,14 @@
             </div><!--/row-->
         </div><!--/span-->
     </div><!--/row-->
-</div><!--/.container-->
-
-<div class="container">
 
     {% if reviews | length != 0 %}
     <div class="row">
-        <h1> Reviews: </h1>
+        <h3> Reviews: </h3>
     </div>
     {% for review in reviews %}
     <br>
-    <div class="card">
+    <div class="card book_reviews">
         <div class="card-header col-sm">
             <h5 class="card-title result-title">{{ review.review_name }} </h5>
             <p> {{ review.acct_name }} </p>
@@ -65,18 +63,22 @@
     <br>
 
     {% if review_active %}
-    <h1> Feel free to write a review: </h1>
+    <h3> Feel free to write a review: </h3>
     <br>
     <form id="review_form" method="POST" action="{{ url_for('post_review',book_id=book.book_id) }}">
         <label for="review_title"><h4> Review Name: </h4></label>
+        <br>
         <input id="review_name" type="text" name="review_title" placeholder="Your review name!" required>
+        <br>
         <label for="review_text"><h4> Your Book Keeper Review: </h4></label>
+        <br>
         <textarea id="review_text" type="text" name="review_text" placeholder="Your thoughts!" required></textarea>
+        <br>
         <button id="submit_review" type="submit" class="signupbtn">Submit Review</button>
     </form>
     {% else %}
     <div class="row">
-        <h1> You have already submitted a review! </h1>
+        <h3> You have already submitted a review! </h3>
     </div>
 
     {% endif %}

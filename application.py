@@ -178,6 +178,11 @@ def search():
 @app.route("/book/<int:book_id>")
 def book(book_id):
     """ Get a specific book..."""
+
+    if session.get('id') is None:
+        flash_err("please login before viewing books...")
+        return redirect(url_for('login'))
+
     book_sql = """
         SELECT 
             book_id,

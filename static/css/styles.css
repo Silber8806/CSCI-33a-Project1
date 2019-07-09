@@ -15,7 +15,8 @@ textarea {
 }
 
 #book_picture {
-    width: 200px;
+    width: 100%;
+    float: left;
 }
 
 input[type=text]:focus,
@@ -99,8 +100,6 @@ ul.flashes {
 }
 
 #submit_review {
-    float:right;
-    overflow: auto;
     margin-bottom: 30px;
 }
 
@@ -119,6 +118,17 @@ footer {
 
 #review_form {
     margin-bottom: 50px;
+}
+
+#user_navbar {
+    float:right;
+}
+
+#review_form input,
+#review_form textarea,
+#review_form button,
+.book_reviews {
+    width: 75%;
 }
 
 /* Change styles for cancel button and signup button on extra small screens */
