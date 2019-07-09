@@ -135,6 +135,35 @@ Note I trimmed the output of the command to not include temporary files.
 
 Honestly think there is a lot of room for improvement.  This is more of a quick prototype.
 
+## Some Notes:
+
+#### CSS and JavaScript Notes
+There are a few things I amended at the ending.  I ran everything through a formatter: python, css and html, 
+re-positioned the JavaScripts from near the end of the \<body> to within the  \<head> tag and decided to
+keep the CSS file instead of run it through SCSS, because the file length is small at the moment.  I think in the 
+future I would refactor CSS to SCSS once the rules become more cumbersome. 
+
+#### Postgres exist clause use
+For database logic, I frequently use the postgres exists clause.  Exists works similar to a join, but doesn't produce
+duplicate keys.  Instead it acts more like a filter.  I use this in production environments for ETL processes and 
+it's very handy for this type of operation.  I think this is ok to use here and just interjecting some of my
+experience from working with postgres for the last 4 years.
+
+#### Design choice for import.py
+
+For the import.py script, I followed ETL process called: Truncate and 
+reload followed by a merge.  It might look a bit weird, but all it does is prevent duplicate loads from having any 
+effect or partial loads.  This is a common pattern for small ETL jobs.  The design was based on my experience as 
+a Data Warehouse Developer at Forrester Research.
+
+#### Use of insert and lack of with in import.py
+
+I based the insert statement on the class example, printed out rows and didn't use the with clause when opening a file.
+I did this,because the class example used insert, printed rows and didn't have a with clause when opening files.
+Typically, if I was going to write this at work, I'd add a with statement and I'd use the COPY Command, bulk loader or
+ native driver to upload the data, because it's a bit faster.  I decided against the later due to the code being 
+ structured that way in the lecture. It's also possible that my knowledge is outdated here.
+
 ## sources
 1. Placeholder Image: 
 https://pkf-francisclarkcareers.co.uk/wp-content/uploads/2017/10/placeholder.png
