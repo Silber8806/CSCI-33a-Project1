@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %} Home Page {% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <h1> Welcome to Book Keeper</h1>
+
+    <p> Book Keeper let's you search awesome books to read adn review. Please login or register to continue. </p>
+
+    <br>
+
+    <div class="card-deck mb-2 text-center">
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">Login Options</h4>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('login') }}">
+                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">Login</button>
+                </a>
+                <a href="{{ url_for('register') }}">
+                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">Register</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

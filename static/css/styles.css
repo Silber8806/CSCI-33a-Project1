@@ -1,0 +1,136 @@
+/* I decided against a SCSS file only
+due to the small amount of rules.  If
+I was to continue adding more rules, I
+would refactor this as a SCSS instead
+of a CSS file.*/
+
+footer {
+    height: 50px;
+}
+
+hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+}
+
+ul.flashes {
+    list-style-type: none;
+}
+
+input[type=text],
+input[type=password],
+input[type=email],
+textarea {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+}
+
+input[type=text]:focus,
+input[type=password]:focus,
+input[type=email]:focus,
+textarea  {
+    background-color: #ddd;
+    outline: none;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+}
+
+button:hover {
+    opacity:1;
+}
+
+.form-control-borderless:hover,
+.form-control-borderless:active,
+.form-control-borderless:focus {
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+
+.container {
+    padding: 16px;
+}
+
+.cancelbtn {
+    padding: 14px 20px;
+    background-color: #f44336;
+}
+
+.cancelbtn,
+.signupbtn {
+    float: left;
+    width: 50%;
+}
+
+.form-control-borderless {
+    border: none;
+}
+
+.search_result {
+    margin: 50px;
+}
+
+#review_text {
+    height: 400px;
+    vertical-align:top;
+    margin-bottom: 30px;
+}
+
+#submit_review {
+    margin-bottom: 30px;
+}
+
+#website_by_clause {
+    float:right;
+    padding-right: 10px;
+}
+
+#main_content {
+    min-height: calc(100vh - 150px);
+}
+
+#book_picture {
+    width: 100%;
+    float: left;
+}
+
+#review_form {
+    margin-bottom: 50px;
+}
+
+#user_navbar {
+    float:right;
+}
+
+#review_form input,
+#review_form textarea,
+#review_form button,
+.book_reviews {
+    width: 75%;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+@media screen and (max-width: 300px) {
+        .cancelbtn,
+        .signupbtn {
+        width: 100%;
+    }
+}
